@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true }
+mongoose.connect('mongodb+srv://admin:admin@monpremiercluster-d66o9.gcp.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useCreateIndex: true }
     );
 const connection = mongoose.connection;
 connection.once('open', () => {
