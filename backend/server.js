@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+var https = require('https');
 
+var fs = require('fs');
 // For authentication
 const passport = require("passport");
 const users = require("./routes/users");
@@ -10,6 +12,10 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+var options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/api.waterbot.fr/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/api.waterbot.fr/fullchain.pem'),
+};
 
 app.use(cors());
 // app.use(bodyParser.json()); Not needed anymore since it is included in Express (see line below)
@@ -38,6 +44,11 @@ app.use(passport.initialize());
 // Passport config
 require("../config/passport")(passport);
 
-app.listen(port, () => {
+
+var server = https.createServer(options, app).listen(port, () => {
     console.log(`Server is running on port: ${port}`);
+});
+app.get('/', function (req, res) {
+    res.writeHead(200);
+    res.end("hello world\n");
 });
